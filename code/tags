@@ -1,0 +1,22 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+FLOAT_MAX	osm.py	/^FLOAT_MAX = sys.float_info.max$/;"	v
+Obstacle	osm.py	/^class Obstacle:$/;"	c
+ShopHandler	osm.py	/^class ShopHandler(osm.SimpleHandler):$/;"	c
+__init__	osm.py	/^    def __init__(self, nodes):$/;"	m	class:Obstacle
+__init__	osm.py	/^    def __init__(self, region=None):$/;"	m	class:ShopHandler
+draw	osm.py	/^    def draw(self, fig):$/;"	m	class:Obstacle
+getLocation	osm.py	/^    def getLocation(location):$/;"	m	class:ShopHandler
+is_obstacle	osm.py	/^    def is_obstacle(w):$/;"	m	class:ShopHandler
+is_restaurant	osm.py	/^    def is_restaurant(elem):$/;"	m	class:ShopHandler
+node	osm.py	/^    def node(self, n):$/;"	m	class:ShopHandler
+parser	process.py	/^    parser = argparse.ArgumentParser()$/;"	v
+process	process.py	/^def process(region):$/;"	f
+region	process.py	/^    region = parser.parse_args().region$/;"	v
+to_csv	osm.py	/^    def to_csv(self):$/;"	m	class:ShopHandler
+way	osm.py	/^    def way(self, w):$/;"	m	class:ShopHandler
+xytransform	process.py	/^def xytransform(region, handler):$/;"	f
