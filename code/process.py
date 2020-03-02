@@ -1,5 +1,6 @@
 import argparse
 import subprocess
+import pickle
 
 import osm
 import numpy as np
@@ -22,13 +23,18 @@ def process(region):
     # save extracted data to csv files
     osmHandler.save()
 
-    # trasform lat, lon to xy coordinates
-    xytransform(region, osmHandler)
-
-# handler contains information about maximum and minimum lat, lon of the area
-def xytransform(region, handler):
+# xytransform transforms the region coordinates to xy
+def xytransform(region):
+    # get data for region
     df = pd.read_csv(f'csv/{region}/shops.csv')
+    with open(f'csv/{region}/obstacles.pk', 'rb') as obsfile:
+        obstacles = pickle.load(obsfile)
 
+    # get metadata for region, e.g. minimum and maximum coordinates
+    with open(f'csv/{region}/meta.txt', 'r') as metafile:
+        metadata = np.array(list(map(float, metafile.readlines())))
+
+    # calculate ratios mean
     ratios, size = list(), df.shape[0]
     for i in range(size):
         u = df.iloc[i]
@@ -36,15 +42,33 @@ def xytransform(region, handler):
             v = df.iloc[j]
             e, g = edistance(u, v), gdistance(u, v).km
             ratios.append(g/e)
+    constant = pd.Series(ratios).mean()
 
-    constants = pd.Series(ratios)
-    transformed = constants.mean() * df
+    # transform restaurants coordinates
+    transformed = constant * df
     transformed.to_csv(f'csv/{region}/shops.xy.csv', index=False)
+
+    # transform obstacles coordinates
+    tobstacles = obstacles * constant
+    tobstacles.dump(f'csv/{region}/obstacles.xy.pk')
+
+    # transform metadata
+    tmetadate = metadata * constant
+    with open(f'csv/{region}/meta.xy.txt', 'w')  as metafile:
+        for data in tmetadate:
+            print(data, file=metafile)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-region', '--region', help='process osm file', type=str)
-    region = parser.parse_args().region
+    parser.add_argument('-region', '--region', help='region to process', type=str)
+    parser.add_argument('-process', '--process', help='type of preprocessing, e.g. osm, xy')
 
-    process(region)
+    args = parser.parse_args()
+
+    if args.process == 'osm':
+        process(args.region)
+    elif args.process == 'xy':
+        xytransform(args.region)
+    else:
+        print('invalid process argument')
