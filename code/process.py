@@ -20,7 +20,7 @@ def process(region):
     osmHandler.apply_file(f'region/{region}.osm')
 
     # save extracted data to csv files
-    osmHandler.to_csv()
+    osmHandler.save()
 
     # trasform lat, lon to xy coordinates
     xytransform(region, osmHandler)

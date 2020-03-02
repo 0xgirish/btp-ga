@@ -45,7 +45,7 @@ class OSMHandler(osm.SimpleHandler):
 
     # create csv file for shops and obstacles
     # TODO: create csv file for obstacles
-    def to_csv(self):
+    def save(self):
         data_columns = ['lat', 'lon']
         df = pd.DataFrame(self.osm_data, columns=data_columns)
         df.to_csv(f'csv/{self.region}/shops.csv', index=False)
