@@ -5,6 +5,9 @@ import osmium as osm
 import numpy as np
 import pandas as pd
 
+from typing import List
+from sympy import Polygon
+
 FLOAT_MAX = sys.float_info.max
 
 # An obstacle contains nodes (lat, lon) which forms a polygon and has height >= 12
@@ -42,6 +45,18 @@ class Obstacles:
         for obstacle in self.obstacles:
             new.add(obstacle * n)
         return new
+
+    # create polygons from Obstacles
+    def polygons(obstacles: Obstacles) -> List[Polygon]:
+        polygons = list()
+        for obstacle in obstacles:
+            polygons(Polygon(*obstacle.nodes))
+        return polygons
+
+    # iterator for obstacles
+    def __iter__(self):
+        for obstacle in self.obstacles:
+            yield obstacle
 
     # dump to pickle file
     def dump(self, path):
