@@ -50,7 +50,7 @@ class SegmentVector(Segment):
             for side in hull.sides:
                 segment = SegmentVector.from_segment(side)
                 if segment.intersection() == EMPTY:
-                    g.add_edge(segment.p1, segment.p2, float(segment.length))
+                    g.add_edge(segment.p1, segment.p2, weight = float(segment.length))
                 else:
                     q.put(segment)
 
@@ -63,6 +63,7 @@ class SegmentVector(Segment):
             segment = q.get()
             polygons = segment.intersection()
             if polygons == EMPTY:
+                g.add_edge(segment.p1, segment.p2, weight = float(segment.length))
                 continue
             segment.convexpath(polygons, q, g)
 
