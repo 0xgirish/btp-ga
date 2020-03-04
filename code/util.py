@@ -10,6 +10,13 @@ import geometry
 # logging config
 logging.basicConfig(level=logging.INFO)
 
+class Pair:
+    def __init__(self, source, dest):
+        self.source, self.dest = source, dest
+
+    def hash(self):
+        return f'({self.source[0]},{self.source[1]})-({self.dest[0]},{self.dest[1]})'
+
 # Pool the results for multiprocessing, returns covered nodes
 def node_fitness(center, instance, radius):
     n_nodes = instance.shape[0]

@@ -17,12 +17,15 @@ logging.basicConfig(level=logging.INFO)
 EMPTY = list()
 POLYGONS = None
 
-def init(obstacles: Obstacles):
+def init(obstacles: Obstacles, is_polygon=False):
     global POLYGONS
     if POLYGONS is not None:
         logging.warning('geometry.py: can not initialize obstacles again')
         return
 
+    if is_polygon:
+        POLYGONS = obstacles
+        return
     POLYGONS = obstacles.polygons()
     logging.info("obstacles initialized")
 

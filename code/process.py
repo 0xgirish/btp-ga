@@ -57,6 +57,11 @@ def xytransform(region):
     tobstacles = obstacles * constant
     tobstacles.dump(f'csv/{region}/obstacles.xy.pk')
 
+    # get polygons from obstacles
+    polygons = tobstacles.polygons()
+    with open(f'csv/{region}/polygons.xy.pk', 'wb') as pfile:
+        pickle.dump(polygons, pfile)
+
     # transform metadata
     tmetadate = metadata * constant
     with open(f'csv/{region}/meta.xy.txt', 'w')  as metafile:
