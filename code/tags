@@ -4,19 +4,65 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+0	btp.vim	/^normal! 0$/;"	m
+EMPTY	geometry.py	/^EMPTY = list()$/;"	v
 FLOAT_MAX	osm.py	/^FLOAT_MAX = sys.float_info.max$/;"	v
+Init	algo.py	/^    def Init(cls, instance, radius, n_circles, obstacles):$/;"	m	class:Model
+Model	algo.py	/^class Model():$/;"	c
+OSMHandler	osm.py	/^class OSMHandler(osm.SimpleHandler):$/;"	c
 Obstacle	osm.py	/^class Obstacle:$/;"	c
-ShopHandler	osm.py	/^class ShopHandler(osm.SimpleHandler):$/;"	c
-__init__	osm.py	/^    def __init__(self, nodes):$/;"	m	class:Obstacle
-__init__	osm.py	/^    def __init__(self, region=None):$/;"	m	class:ShopHandler
+Obstacles	osm.py	/^class Obstacles:$/;"	c
+POLYGONS	geometry.py	/^POLYGONS = None$/;"	v
+SEED	constants.py	/^SEED = None$/;"	v
+SessionLoad	btp.vim	/^let SessionLoad = 1$/;"	v
+__init__	algo.py	/^    def __init__(self, gnome=None, log=False):$/;"	m	class:Model
+__init__	osm.py	/^    def __init__(self, nodes, node_map=None):$/;"	m	class:Obstacle
+__init__	osm.py	/^    def __init__(self, region):$/;"	m	class:Obstacles
+__init__	osm.py	/^    def __init__(self, region=None):$/;"	m	class:OSMHandler
+__iter__	osm.py	/^    def __iter__(self):$/;"	m	class:Obstacles	file:
+__mul__	osm.py	/^    def __mul__(self, n):$/;"	m	class:Obstacle	file:
+__mul__	osm.py	/^    def __mul__(self, n):$/;"	m	class:Obstacles	file:
+__str__	algo.py	/^    def __str__(self):$/;"	m	class:Model	file:
+add	osm.py	/^    def add(self, obstacle):$/;"	m	class:Obstacles
+args	main.py	/^    args = parser.parse_args()$/;"	v
+args	process.py	/^    args = parser.parse_args()$/;"	v
+blr	constants.py	/^def blr():$/;"	f
+cdg	constants.py	/^def cdg():$/;"	f
+change_seed	constants.py	/^def change_seed(seed):$/;"	f
+convexpath	geometry.py	/^def convexpath(segment: Segment2D, polygons: List[Polygon], q: Queue, visited: Dict[Segment2D, bool]):$/;"	f
+crossover	algo.py	/^    def crossover(cls, object1, object2):$/;"	m	class:Model
+dlh	constants.py	/^def dlh():$/;"	f
 draw	osm.py	/^    def draw(self, fig):$/;"	m	class:Obstacle
-getLocation	osm.py	/^    def getLocation(location):$/;"	m	class:ShopHandler
-is_obstacle	osm.py	/^    def is_obstacle(w):$/;"	m	class:ShopHandler
-is_restaurant	osm.py	/^    def is_restaurant(elem):$/;"	m	class:ShopHandler
-node	osm.py	/^    def node(self, n):$/;"	m	class:ShopHandler
+draw_gacluster	util.py	/^def draw_gacluster(df, region, tag, obstacles):$/;"	f
+dump	osm.py	/^    def dump(self, path):$/;"	m	class:Obstacles
+esp	geometry.py	/^def esp(segment: Segment2D) -> float:$/;"	f
+fitness	algo.py	/^    def fitness(self):$/;"	m	class:Model
+getLocation	osm.py	/^    def getLocation(location):$/;"	m	class:OSMHandler
+init	geometry.py	/^def init(obstacles: Obstacles):$/;"	f
+initialize	constants.py	/^def initialize(region, tag):$/;"	f
+instance	algo.py	/^    instance = None # instance is the coordinates of the restaurants$/;"	v	class:Model
+intersection	geometry.py	/^def intersection(segment: Segment2D) -> List[Polygon]:$/;"	f
+is_obstacle	osm.py	/^    def is_obstacle(w):$/;"	m	class:OSMHandler
+is_restaurant	osm.py	/^    def is_restaurant(elem):$/;"	m	class:OSMHandler
+main	main.py	/^def main(region, tag):$/;"	f
+mutation	algo.py	/^    def mutation(cls, obj):$/;"	m	class:Model
+n_circles	algo.py	/^    n_circles = None # number of charging stations to cover restaurants$/;"	v	class:Model
+new_generation	algo.py	/^    def new_generation(cls, population):$/;"	m	class:Model
+node	osm.py	/^    def node(self, n):$/;"	m	class:OSMHandler
+node_fitness	util.py	/^def node_fitness(center, instance, radius):$/;"	f
+obstacles	algo.py	/^    obstacles = None # enviorment obstacles$/;"	v	class:Model
+parser	main.py	/^    parser = argparse.ArgumentParser()$/;"	v
 parser	process.py	/^    parser = argparse.ArgumentParser()$/;"	v
+polygons	osm.py	/^    def polygons(self) -> List[Polygon]:$/;"	m	class:Obstacles
 process	process.py	/^def process(region):$/;"	f
-region	process.py	/^    region = parser.parse_args().region$/;"	v
-to_csv	osm.py	/^    def to_csv(self):$/;"	m	class:ShopHandler
-way	osm.py	/^    def way(self, w):$/;"	m	class:ShopHandler
-xytransform	process.py	/^def xytransform(region, handler):$/;"	f
+radius	algo.py	/^    radius = None # radius is the distance a fully charged drone can travel from recharging station and come back with payload$/;"	v	class:Model
+s:l	btp.vim	/^let s:l = 1 - ((0 * winheight(0) + 19) \/ 39)$/;"	v
+s:so_save	btp.vim	/^let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0$/;"	v
+s:sx	btp.vim	/^let s:sx = expand("<sfile>:p:r")."x.vim"$/;"	v
+s:wipebuf	btp.vim	/^  let s:wipebuf = bufnr('%')$/;"	v
+save	osm.py	/^    def save(self):$/;"	m	class:OSMHandler
+save	osm.py	/^    def save(self):$/;"	m	class:Obstacles
+selection	algo.py	/^    def selection(cls, population):$/;"	m	class:Model
+way	osm.py	/^    def way(self, w):$/;"	m	class:OSMHandler
+xytransform	process.py	/^def xytransform(region):$/;"	f
+zt	btp.vim	/^normal! zt$/;"	m

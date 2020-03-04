@@ -47,10 +47,10 @@ class Obstacles:
         return new
 
     # create polygons from Obstacles
-    def polygons(obstacles: Obstacles) -> List[Polygon]:
+    def polygons(self) -> List[Polygon]:
         polygons = list()
-        for obstacle in obstacles:
-            polygons(Polygon(*obstacle.nodes))
+        for obstacle in self.obstacles:
+            polygons.append(Polygon(*obstacle.nodes))
         return polygons
 
     # iterator for obstacles
@@ -78,8 +78,6 @@ class OSMHandler(osm.SimpleHandler):
     def __init__(self, region=None):
         osm.SimpleHandler.__init__(self)
         self.region = region
-        self.minlat, self.minlon = FLOAT_MAX, FLOAT_MAX
-        self.maxlat, self.maxlon = -1, -1
         self.osm_data, self.obstacles = list(), Obstacles(region) # contains list of all the building which have height >= 12 m
         self.node_location_map = dict()
 
@@ -88,10 +86,6 @@ class OSMHandler(osm.SimpleHandler):
         location = OSMHandler.getLocation(n.location)
         self.node_location_map[n.id] = location
 
-        self.minlat = location[0] if location[0] < self.minlat else self.minlat
-        self.minlon = location[1] if location[1] < self.minlon else self.minlon
-        self.maxlat = location[0] if location[0] > self.maxlat else self.maxlat
-        self.maxlon = location[1] if location[1] > self.maxlon else self.maxlon
         if OSMHandler.is_restaurant(n):
             self.osm_data.append(location)
 
@@ -109,13 +103,6 @@ class OSMHandler(osm.SimpleHandler):
 
         # save obstacles to pickle and txt file
         self.obstacles.save()
-
-        # save maximum and minimum coordinates in the region
-        with open(f'csv/{self.region}/meta.txt', 'w') as metafile:
-            print(self.minlat, file=metafile)
-            print(self.minlon, file=metafile)
-            print(self.maxlat, file=metafile)
-            print(self.maxlon, file=metafile)
 
     @staticmethod
     def is_obstacle(w):

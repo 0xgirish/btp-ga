@@ -1,6 +1,7 @@
 import argparse
 import subprocess
 import pickle
+import logging
 
 import osm
 import numpy as np
@@ -10,6 +11,9 @@ from geopy.distance import geodesic
 
 # eculedian and geodistance
 edistance, gdistance = lambda u, v: np.sqrt(np.sum((u-v)**2)), lambda u, v: geodesic(set(u), set(v))
+
+# set logging level
+logging.basicConfig(level=logging.INFO)
 
 # process region osm file
 def process(region):
@@ -43,6 +47,7 @@ def xytransform(region):
             e, g = edistance(u, v), gdistance(u, v).km
             ratios.append(g/e)
     constant = pd.Series(ratios).mean()
+    logging.info(f"ratios mean = {constant}")
 
     # transform restaurants coordinates
     transformed = constant * df

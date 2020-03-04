@@ -1,71 +1,69 @@
-from queue import Queue
+import logging
 import networkx as nx
 
-from typing import List
+from queue import Queue
+from typing import List, Dict
+from collections import defaultdict
 
 from sympy import Point, Polygon, convex_hull
-from sympy.geometry import Segment
 from sympy.geometry.line import Segment2D
-from sympy.geometry.util import intersection
+from sympy.geometry.util import intersection as segment_intersection
 
 from osm import Obstacles
+
+# set logging level
+logging.basicConfig(level=logging.INFO)
 
 EMPTY = list()
 POLYGONS = None
 
 def init(obstacles: Obstacles):
+    global POLYGONS
+    if POLYGONS is not None:
+        logging.warning('geometry.py: can not initialize obstacles again')
+        return
+
     POLYGONS = obstacles.polygons()
+    logging.info("obstacles initialized")
 
-class SegmentVector(Segment):
-    def __init__(self, from: Point, to: Point):
-        if POLYGONS is None:
-            raise Exception("call geometry.init before using it")
-        super().__init__(from, to)
-        self.from, self.to = from, to
+# intersection finds polygons which intersects with the segment
+def intersection(segment: Segment2D) -> List[Polygon]:
+    intersected_polygons = list()
+    for polygon in POLYGONS:
+        intersect = segment_intersection(segment, polygon)
+        if intersect == EMPTY or any(isinstance(item, Segment2D) for item in intersect):
+            continue
+        intersected_polygons.append(polygon)
 
-    @classmethod
-    def from_segment(s: Segment) -> SegmentVector:
-        return SegmentVector(s.p1, s.p2)
+    return intersected_polygons
 
-    # intersection finds polygons which intersects with the segment
-    def intersection(self) -> List[Polygon]:
-        intersected_polygons = list()
-        for polygon in POLYGONS:
-            intersect = intersection(self, polygon)
-            if intersect == EMPTY or any(isinstance(item, Segment2D) for item in intersect):
-                continue
-
-            intersected_polygons.append(polygon)
-
-        return intersected_polygons
-
-    # convexpath add segment which does not intersects to graph g
-    # other segments to queue q
-    def convexpath(self, polygons: List[Polygon], q: Queue, g: nx.Graph) -> List[Polygon]:
-        for polygon in polygons:
-            points = polygon.vertices
-            points.extend([self.from, self.to])
-            hull = convex_hull(*points, polygon=True)
-            
-            for side in hull.sides:
-                segment = SegmentVector.from_segment(side)
-                if segment.intersection() == EMPTY:
-                    g.add_edge(segment.p1, segment.p2, weight = float(segment.length))
-                else:
-                    q.put(segment)
-
-    # calculate ESP distance
-    def esp(self) -> float:
-        q, g = Queue(), nx.Graph()
-        q.put(self)
+# convexpath add all the segments of convex hull to queue, except visited segments
+def convexpath(segment: Segment2D, polygons: List[Polygon], q: Queue, visited: Dict[Segment2D, bool]):
+    # get convex hull for source, destination and vertices of polygon
+    for polygon in polygons:
+        points = polygon.vertices
+        points.extend([segment.p1, segment.p2])
+        hull = convex_hull(*points, polygon=True)
         
-        while not q.empty():
-            segment = q.get()
-            polygons = segment.intersection()
-            if polygons == EMPTY:
-                g.add_edge(segment.p1, segment.p2, weight = float(segment.length))
-                continue
-            segment.convexpath(polygons, q, g)
+        for side in hull.sides:
+            if not visited[side]:
+                q.put(side)
 
-        length, _ = g.bidirectional_dijkstra(self.from, self.to)
-        return length
+# calculate Euclidean Shortest Path (ESP) distance, ref: Hong & Murry (2013)
+def esp(segment: Segment2D) -> float:
+    q, g, visited = Queue(), nx.Graph(), defaultdict(bool)
+
+    q.put(segment)
+    while not q.empty():
+        segment = q.get()
+        if not visited[segment]:
+            visited[segment] = True
+
+        polygons = intersection(segment)
+        if polygons == EMPTY:
+            g.add_edge(segment.p1, segment.p2, weight = float(segment.length))
+            continue
+        convexpath(segment, polygons, q, visited)
+
+    length, _ = nx.bidirectional_dijkstra(g, segment.p1, segment.p2)
+    return length
